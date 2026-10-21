@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// SQLite has no enums, so status fields are plain strings (values in comments).
+
+model Device {
+  id           Int      @id @default(autoincrement())
+  serialNumber String   @unique
+  model        String
+  status       String   @default("AVAILABLE") // AVAILABLE | RENTED | SERVICE
+  dailyRate    Int // IDR per day
+  rentals      Rental[]
+}
+
+model Customer {
+  id      Int      @id @default(autoincrement())
+  name    String
+  phone   String
+  email   String
+  rentals Rental[]
+}
+
+model Rental {
+  id                 Int       @id @default(autoincrement())
+  customerId         Int
+  deviceId           Int
+  destinationCountry String
+  startDate          DateTime
+  endDate            DateTime
+  status             String    @default("PENDING_PAYMENT") // PENDING_PAYMENT | ACTIVE | RETURNED
+  customer           Customer  @relation(fields: [customerId], references: [id])
+  device             Device    @relation(fields: [deviceId], references: [id])
+  invoice            Invoice?
+}
+
+model Invoice {
+  id              Int       @id @default(autoincrement())
+  rentalId        Int       @unique
+  amount          Int // IDR
+  status          String    @default("UNPAID") // UNPAID | PAID
+  midtransOrderId String?
+  paidAt          DateTime?
+  rental          Rental    @relation(fields: [rentalId], references: [id])
+}

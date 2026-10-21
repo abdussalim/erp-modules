@@ -1,0 +1,56 @@
+{
+  "name": "MiFi - Payment Paid Notification",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "payment-paid",
+        "options": {}
+      },
+      "id": "a1000000-0000-4000-8000-000000000001",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "webhookId": "payment-paid-webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build a readable message from the payload sent by the app (lib/n8n.ts)\nconst d = $input.first().json.body;\nconst message = `Payment received: invoice #${d.invoiceId}, IDR ${Number(d.amount).toLocaleString('id-ID')} from ${d.customer} (device ${d.device}, going to ${d.country}).`;\nreturn [{ json: { message } }];"
+      },
+      "id": "a1000000-0000-4000-8000-000000000002",
+      "name": "Format Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [220, 0]
+    },
+    {
+      "parameters": {},
+      "id": "a1000000-0000-4000-8000-000000000003",
+      "name": "Show Message",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [440, 0]
+    },
+    {
+      "parameters": {
+        "chatId": "YOUR_TELEGRAM_CHAT_ID",
+        "text": "={{ $json.message }}",
+        "additionalFields": {}
+      },
+      "id": "a1000000-0000-4000-8000-000000000004",
+      "name": "Telegram (optional)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [660, 0],
+      "disabled": true
+    }
+  ],
+  "connections": {
+    "Webhook": { "main": [[{ "node": "Format Message", "type": "main", "index": 0 }]] },
+    "Format Message": { "main": [[{ "node": "Show Message", "type": "main", "index": 0 }]] },
+    "Show Message": { "main": [[{ "node": "Telegram (optional)", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "active": false
+}
