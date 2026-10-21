@@ -21,6 +21,13 @@ export async function POST(req: NextRequest) {
   if (!device || device.status !== "AVAILABLE") {
     return NextResponse.json({ error: "Device is not available" }, { status: 400 });
   }
+  // Device stays AVAILABLE until paid, so block it while another rental is waiting for payment
+  const pending = await db.rental.findFirst({
+    where: { deviceId: device.id, status: "PENDING_PAYMENT" },
+  });
+  if (pending) {
+    return NextResponse.json({ error: "Device is waiting for payment on another rental" }, { status: 400 });
+  }
 
   const start = new Date(startDate);
   const end = new Date(endDate);

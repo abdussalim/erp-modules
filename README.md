@@ -154,7 +154,9 @@ flowchart TD
   E --> F["POST /api/rentals"]
   F --> G{"Unit AVAILABLE?"}
   G -->|tidak| X["Error: unit tidak tersedia"]
-  G -->|ya| H{"Tanggal selesai > mulai?"}
+  G -->|ya| P{"Ada sewa lain PENDING_PAYMENT untuk unit ini?"}
+  P -->|ya| Z["Error: unit menunggu pembayaran sewa lain"]
+  P -->|tidak| H{"Tanggal selesai > mulai?"}
   H -->|tidak| Y["Error: tanggal tidak valid"]
   H -->|ya| I["Buat Rental PENDING_PAYMENT"]
   I --> J["Buat Invoice UNPAID, jumlah = hari x tarif harian"]
