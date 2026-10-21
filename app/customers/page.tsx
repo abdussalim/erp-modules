@@ -25,7 +25,7 @@ export default function CustomersPage() {
     <div>
       <h1 className="mb-4 text-2xl font-bold">Customers</h1>
 
-      <form onSubmit={addCustomer} className="mb-6 flex gap-2">
+      <form onSubmit={addCustomer} className="mb-6 flex flex-wrap gap-2">
         <input required placeholder="Name" className="rounded border p-2" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
         <input required placeholder="Phone" className="rounded border p-2" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
         <input required type="email" placeholder="Email" className="rounded border p-2" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />

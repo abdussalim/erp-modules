@@ -92,7 +92,7 @@ export default function BillingPage() {
               <td className="p-2">{i.rental.customer.name}</td>
               <td className="p-2">{i.rental.device.serialNumber}</td>
               <td className="p-2">{i.amount.toLocaleString("id-ID")}</td>
-              <td className="p-2">{i.status}</td>
+              <td className="p-2"><span className="badge" data-status={i.status}>{i.status}</span></td>
               <td className="flex gap-2 p-2">
                 {i.status === "UNPAID" && (
                   <>

@@ -98,7 +98,7 @@ export default function RentalsPage() {
               <td className="p-2">{r.destinationCountry}</td>
               <td className="p-2">{r.startDate.slice(0, 10)} to {r.endDate.slice(0, 10)}</td>
               <td className="p-2">{r.invoice?.amount.toLocaleString("id-ID")}</td>
-              <td className="p-2">{r.status}</td>
+              <td className="p-2"><span className="badge" data-status={r.status}>{r.status}</span></td>
               <td className="p-2">
                 {r.status === "ACTIVE" && (
                   <button onClick={() => returnRental(r.id)} className="rounded bg-green-600 px-3 py-1 text-white">Return</button>

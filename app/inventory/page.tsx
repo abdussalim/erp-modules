@@ -30,7 +30,7 @@ export default function InventoryPage() {
     <div>
       <h1 className="mb-4 text-2xl font-bold">Inventory</h1>
 
-      <form onSubmit={addDevice} className="mb-6 flex gap-2">
+      <form onSubmit={addDevice} className="mb-6 flex flex-wrap gap-2">
         <input required placeholder="Serial number" className="rounded border p-2" value={form.serialNumber} onChange={(e) => setForm({ ...form, serialNumber: e.target.value })} />
         <input required placeholder="Model" className="rounded border p-2" value={form.model} onChange={(e) => setForm({ ...form, model: e.target.value })} />
         <input required type="number" placeholder="Daily rate (IDR)" className="rounded border p-2" value={form.dailyRate} onChange={(e) => setForm({ ...form, dailyRate: e.target.value })} />
