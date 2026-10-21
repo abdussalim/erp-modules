@@ -69,7 +69,7 @@ flowchart LR
   API --> DB[("SQLite via Prisma")]
   API -->|country list| CN["countriesnow.space"]
   API -->|create token / check status| MT
-  MT -->|notification (callback)| API
+  MT -->|"notification (callback)"| API
   API -->|POST payment.paid| N8N["n8n webhook"]
   CRON["n8n daily cron"] -->|GET /api/rentals?overdue=1| API
   N8N --> MSG["Message / Telegram"]
