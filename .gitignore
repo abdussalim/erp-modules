@@ -46,10 +46,3 @@ next-env.d.ts
 
 # keep the template
 !.env.example
-
-# local only
-AGENTS.md
-CLAUDE.md
-.claude/
-docs/
-*.docx
