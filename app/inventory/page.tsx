@@ -31,14 +31,14 @@ export default function InventoryPage() {
       <h1 className="mb-4 text-2xl font-bold">Inventory</h1>
 
       <form onSubmit={addDevice} className="mb-6 flex flex-wrap gap-2">
-        <input required placeholder="Serial number" className="rounded border p-2" value={form.serialNumber} onChange={(e) => setForm({ ...form, serialNumber: e.target.value })} />
-        <input required placeholder="Model" className="rounded border p-2" value={form.model} onChange={(e) => setForm({ ...form, model: e.target.value })} />
-        <input required type="number" placeholder="Daily rate (IDR)" className="rounded border p-2" value={form.dailyRate} onChange={(e) => setForm({ ...form, dailyRate: e.target.value })} />
-        <button className="rounded bg-blue-700 px-4 text-white">Add device</button>
+        <input required placeholder="Serial number" className="rounded-lg border p-2" value={form.serialNumber} onChange={(e) => setForm({ ...form, serialNumber: e.target.value })} />
+        <input required placeholder="Model" className="rounded-lg border p-2" value={form.model} onChange={(e) => setForm({ ...form, model: e.target.value })} />
+        <input required type="number" placeholder="Daily rate (IDR)" className="rounded-lg border p-2" value={form.dailyRate} onChange={(e) => setForm({ ...form, dailyRate: e.target.value })} />
+        <button className="rounded-lg bg-blue-700 px-4 text-white">Add device</button>
       </form>
 
       <table className="w-full bg-white text-left shadow">
-        <thead className="bg-gray-100">
+        <thead className="bg-slate-50">
           <tr>
             <th className="p-2">Serial</th>
             <th className="p-2">Model</th>
@@ -53,7 +53,7 @@ export default function InventoryPage() {
               <td className="p-2">{d.model}</td>
               <td className="p-2">{d.dailyRate.toLocaleString("id-ID")}</td>
               <td className="p-2">
-                <select value={d.status} onChange={(e) => changeStatus(d.id, e.target.value)} className="rounded border p-1">
+                <select value={d.status} onChange={(e) => changeStatus(d.id, e.target.value)} className="rounded-lg border p-1">
                   <option>AVAILABLE</option>
                   <option>RENTED</option>
                   <option>SERVICE</option>
@@ -61,6 +61,9 @@ export default function InventoryPage() {
               </td>
             </tr>
           ))}
+          {devices.length === 0 && (
+            <tr><td colSpan={4} className="text-center text-slate-500">No devices yet. Add one above.</td></tr>
+          )}
         </tbody>
       </table>
     </div>

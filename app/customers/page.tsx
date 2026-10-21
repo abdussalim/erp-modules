@@ -26,14 +26,14 @@ export default function CustomersPage() {
       <h1 className="mb-4 text-2xl font-bold">Customers</h1>
 
       <form onSubmit={addCustomer} className="mb-6 flex flex-wrap gap-2">
-        <input required placeholder="Name" className="rounded border p-2" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-        <input required placeholder="Phone" className="rounded border p-2" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-        <input required type="email" placeholder="Email" className="rounded border p-2" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-        <button className="rounded bg-blue-700 px-4 text-white">Add customer</button>
+        <input required placeholder="Name" className="rounded-lg border p-2" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+        <input required placeholder="Phone" className="rounded-lg border p-2" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+        <input required type="email" placeholder="Email" className="rounded-lg border p-2" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+        <button className="rounded-lg bg-blue-700 px-4 text-white">Add customer</button>
       </form>
 
       <table className="w-full bg-white text-left shadow">
-        <thead className="bg-gray-100">
+        <thead className="bg-slate-50">
           <tr>
             <th className="p-2">Name</th>
             <th className="p-2">Phone</th>
@@ -48,6 +48,9 @@ export default function CustomersPage() {
               <td className="p-2">{c.email}</td>
             </tr>
           ))}
+          {customers.length === 0 && (
+            <tr><td colSpan={3} className="text-center text-slate-500">No customers yet. Add one above.</td></tr>
+          )}
         </tbody>
       </table>
     </div>

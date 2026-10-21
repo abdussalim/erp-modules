@@ -48,7 +48,7 @@ export default function RentalsPage() {
     load();
   }
 
-  const field = "rounded border p-2";
+  const field = "rounded-lg border p-2";
   return (
     <div>
       <h1 className="mb-4 text-2xl font-bold">Rentals</h1>
@@ -74,12 +74,12 @@ export default function RentalsPage() {
         </select>
         <input required type="date" className={field} value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value })} />
         <input required type="date" className={field} value={form.endDate} onChange={(e) => setForm({ ...form, endDate: e.target.value })} />
-        <button className="rounded bg-blue-700 px-4 text-white">Create rental</button>
+        <button className="rounded-lg bg-blue-700 px-4 text-white">Create rental</button>
       </form>
       {error && <p className="mb-2 text-red-600">{error}</p>}
 
       <table className="mt-4 w-full bg-white text-left shadow">
-        <thead className="bg-gray-100">
+        <thead className="bg-slate-50">
           <tr>
             <th className="p-2">Customer</th>
             <th className="p-2">Device</th>
@@ -101,11 +101,14 @@ export default function RentalsPage() {
               <td className="p-2"><span className="badge" data-status={r.status}>{r.status}</span></td>
               <td className="p-2">
                 {r.status === "ACTIVE" && (
-                  <button onClick={() => returnRental(r.id)} className="rounded bg-green-600 px-3 py-1 text-white">Return</button>
+                  <button onClick={() => returnRental(r.id)} className="rounded-lg bg-green-600 px-3 py-1 text-white">Return</button>
                 )}
               </td>
             </tr>
           ))}
+          {rentals.length === 0 && (
+            <tr><td colSpan={7} className="text-center text-slate-500">No rentals yet. Create one above.</td></tr>
+          )}
         </tbody>
       </table>
     </div>

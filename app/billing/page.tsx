@@ -75,7 +75,7 @@ export default function BillingPage() {
       {message && <p className="mb-2 text-blue-700">{message}</p>}
 
       <table className="w-full bg-white text-left shadow">
-        <thead className="bg-gray-100">
+        <thead className="bg-slate-50">
           <tr>
             <th className="p-2">Invoice</th>
             <th className="p-2">Customer</th>
@@ -96,13 +96,16 @@ export default function BillingPage() {
               <td className="flex gap-2 p-2">
                 {i.status === "UNPAID" && (
                   <>
-                    <button onClick={() => pay(i.id)} className="rounded bg-blue-700 px-3 py-1 text-white">Pay</button>
-                    <button onClick={() => checkStatus(i.id)} className="rounded border px-3 py-1">Check status</button>
+                    <button onClick={() => pay(i.id)} className="rounded-lg bg-blue-700 px-3 py-1 text-white">Pay</button>
+                    <button onClick={() => checkStatus(i.id)} className="rounded-lg border px-3 py-1">Check status</button>
                   </>
                 )}
               </td>
             </tr>
           ))}
+          {invoices.length === 0 && (
+            <tr><td colSpan={6} className="text-center text-slate-500">No invoices yet. An invoice is created with every rental.</td></tr>
+          )}
         </tbody>
       </table>
     </div>

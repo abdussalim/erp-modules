@@ -44,10 +44,15 @@
   button {
     cursor: pointer;
     font-weight: 500;
-    transition: opacity 0.15s;
+    transition:
+      opacity 0.15s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   }
   button:hover {
     opacity: 0.85;
+  }
+  button:active {
+    transform: scale(0.97); /* small press feedback */
   }
 }
 
