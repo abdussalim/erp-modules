@@ -76,6 +76,153 @@ flowchart LR
   CRON --> MSG
 ```
 
+## Flow per modul
+
+### Gambaran besar
+
+Satu siklus bisnis: unit didaftarkan, disewa, dibayar, lalu dikembalikan.
+
+```mermaid
+flowchart LR
+  A["Inventory: tambah unit"] --> B["Customers: tambah pelanggan"]
+  B --> C["Rentals: buat sewa"]
+  C --> D["Billing: invoice UNPAID"]
+  D -->|bayar| E["Invoice PAID"]
+  E --> F["n8n: notifikasi lunas"]
+  E --> G["Sewa ACTIVE, unit RENTED"]
+  G -->|Return| H["Sewa RETURNED, unit AVAILABLE"]
+  G -.->|lewat tanggal selesai| I["n8n: pengingat telat"]
+  E --> J["Dashboard: pendapatan bertambah"]
+```
+
+### Status data
+
+```mermaid
+stateDiagram-v2
+  state "Device (unit)" as Dev {
+    AVAILABLE --> RENTED: invoice lunas
+    RENTED --> AVAILABLE: Return
+    AVAILABLE --> SERVICE: ubah manual
+    SERVICE --> AVAILABLE: ubah manual
+  }
+  state "Rental (sewa)" as Ren {
+    PENDING_PAYMENT --> ACTIVE: invoice lunas
+    ACTIVE --> RETURNED: Return
+  }
+  state "Invoice" as Inv {
+    UNPAID --> PAID: pembayaran dikonfirmasi
+  }
+```
+
+### Inventory
+
+```mermaid
+flowchart TD
+  A["Buka halaman Inventory"] --> B["GET /api/inventory"]
+  B --> C["Tampilkan daftar unit"]
+  C --> D{"Aksi staf"}
+  D -->|"Tambah unit (serial, model, tarif harian)"| E["POST /api/inventory"]
+  E --> F["Unit baru, status AVAILABLE"]
+  D -->|Ubah status| G["PATCH /api/inventory"]
+  G --> H["AVAILABLE / RENTED / SERVICE"]
+  F --> B
+  H --> B
+```
+
+### Customers
+
+```mermaid
+flowchart TD
+  A["Buka halaman Customers"] --> B["GET /api/customers"]
+  B --> C["Tampilkan daftar pelanggan"]
+  C -->|"Isi nama, telepon, email"| D["POST /api/customers"]
+  D --> B
+```
+
+### Rentals
+
+```mermaid
+flowchart TD
+  A["Buka halaman Rentals"] --> B["Ambil data: /api/rentals, /api/inventory, /api/customers"]
+  A --> C["GET /api/countries"]
+  C --> C1["Server memanggil countriesnow.space"]
+  C1 -->|gagal| C2["Pakai daftar negara cadangan"]
+  C1 --> D["Dropdown negara tujuan"]
+  C2 --> D
+  B --> E["Staf pilih pelanggan, unit, negara, tanggal"]
+  D --> E
+  E --> F["POST /api/rentals"]
+  F --> G{"Unit AVAILABLE?"}
+  G -->|tidak| X["Error: unit tidak tersedia"]
+  G -->|ya| H{"Tanggal selesai > mulai?"}
+  H -->|tidak| Y["Error: tanggal tidak valid"]
+  H -->|ya| I["Buat Rental PENDING_PAYMENT"]
+  I --> J["Buat Invoice UNPAID, jumlah = hari x tarif harian"]
+  K["Tombol Return pada sewa"] --> L["PATCH /api/rentals"]
+  L --> M["Rental RETURNED, unit AVAILABLE"]
+```
+
+### Billing (pembayaran)
+
+```mermaid
+sequenceDiagram
+  actor S as Staf
+  participant UI as billing/page.tsx
+  participant API as /api/payments
+  participant MT as Midtrans Sandbox
+  participant L as markInvoicePaid()
+  participant N as n8n
+
+  S->>UI: klik Pay
+  UI->>API: POST { invoiceId }
+  alt Mode mock (tanpa key)
+    API-->>UI: { mock: true }
+    UI->>S: konfirmasi "Simulate payment?"
+    UI->>L: POST /api/payments/callback { mock: true }
+  else Mode Midtrans
+    API->>MT: minta Snap token
+    MT-->>API: token
+    API-->>UI: { token }
+    UI->>MT: snap.pay(token), pelanggan membayar
+    alt Callback (butuh URL publik)
+      MT->>L: POST /api/payments/callback, signature dicek
+    else Tombol Check status (localhost)
+      S->>UI: klik Check status
+      UI->>API: GET ?invoiceId
+      API->>MT: cek status transaksi
+      MT-->>API: settlement / capture
+      API->>L: tandai lunas
+    end
+  end
+  L->>L: Invoice PAID, Rental ACTIVE, Device RENTED
+  L->>N: POST payment.paid
+```
+
+### Dashboard
+
+```mermaid
+flowchart LR
+  A["Buka Dashboard"] --> B["Server component baca database langsung"]
+  B --> C["Hitung unit AVAILABLE"]
+  B --> D["Hitung sewa ACTIVE"]
+  B --> E["Hitung invoice UNPAID"]
+  B --> F["Jumlahkan invoice PAID"]
+  C & D & E & F --> G["Tampilkan 4 kartu angka"]
+```
+
+### Otomasi n8n
+
+```mermaid
+flowchart LR
+  subgraph W1["payment-paid.json"]
+    A["Webhook /payment-paid"] --> B["Format Message"] --> C["Show Message"] -.-> D["Telegram (opsional)"]
+  end
+  subgraph W2["overdue-check.json"]
+    E["Cron setiap hari 08.00"] --> F["GET /api/rentals?overdue=1"] --> G["Build Reminder"] --> H["Show Message"] -.-> I["Telegram (opsional)"]
+  end
+  APP["App: markInvoicePaid()"] -->|POST JSON| A
+```
+
 ## Alur kode: dari klik "Pay" sampai notifikasi n8n
 
 1. `app/billing/page.tsx` - `pay()` memanggil `POST /api/payments` dengan id invoice.
