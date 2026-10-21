@@ -243,6 +243,7 @@ flowchart LR
 ```
 app/
   layout.tsx, page.tsx            navigasi + dashboard (server component)
+  nav-link.tsx                    link sidebar yang menandai halaman aktif
   inventory/page.tsx              daftar/tambah/ubah status unit
   customers/page.tsx              daftar/tambah pelanggan
   rentals/page.tsx                buat sewa, return, dropdown negara

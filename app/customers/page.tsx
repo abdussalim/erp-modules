@@ -23,13 +23,14 @@ export default function CustomersPage() {
 
   return (
     <div>
-      <h1 className="mb-4 text-2xl font-bold">Customers</h1>
+      <h1 className="text-2xl font-bold">Customers</h1>
+      <p className="mb-6 text-slate-500">Customers who rent our devices.</p>
 
-      <form onSubmit={addCustomer} className="mb-6 flex flex-wrap gap-2">
+      <form onSubmit={addCustomer} className="card mb-6 flex flex-wrap gap-3">
         <input required placeholder="Name" className="rounded-lg border p-2" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
         <input required placeholder="Phone" className="rounded-lg border p-2" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
         <input required type="email" placeholder="Email" className="rounded-lg border p-2" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-        <button className="rounded-lg bg-blue-700 px-4 text-white">Add customer</button>
+        <button className="rounded-lg bg-blue-600 px-4 py-2 text-white">Add customer</button>
       </form>
 
       <table className="w-full bg-white text-left shadow">

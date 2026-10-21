@@ -51,9 +51,10 @@ export default function RentalsPage() {
   const field = "rounded-lg border p-2";
   return (
     <div>
-      <h1 className="mb-4 text-2xl font-bold">Rentals</h1>
+      <h1 className="text-2xl font-bold">Rentals</h1>
+      <p className="mb-6 text-slate-500">Create a rental. Its invoice is generated automatically.</p>
 
-      <form onSubmit={createRental} className="mb-2 flex flex-wrap gap-2">
+      <form onSubmit={createRental} className="card mb-2 flex flex-wrap gap-3">
         <select required className={field} value={form.customerId} onChange={(e) => setForm({ ...form, customerId: e.target.value })}>
           <option value="">Customer...</option>
           {customers.map((c) => (
@@ -74,7 +75,7 @@ export default function RentalsPage() {
         </select>
         <input required type="date" className={field} value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value })} />
         <input required type="date" className={field} value={form.endDate} onChange={(e) => setForm({ ...form, endDate: e.target.value })} />
-        <button className="rounded-lg bg-blue-700 px-4 text-white">Create rental</button>
+        <button className="rounded-lg bg-blue-600 px-4 py-2 text-white">Create rental</button>
       </form>
       {error && <p className="mb-2 text-red-600">{error}</p>}
 

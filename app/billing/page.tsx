@@ -71,7 +71,8 @@ export default function BillingPage() {
 
   return (
     <div>
-      <h1 className="mb-4 text-2xl font-bold">Billing</h1>
+      <h1 className="text-2xl font-bold">Billing</h1>
+      <p className="mb-6 text-slate-500">Rental invoices and payments via Midtrans.</p>
       {message && <p className="mb-2 text-blue-700">{message}</p>}
 
       <table className="w-full bg-white text-left shadow">
@@ -96,7 +97,7 @@ export default function BillingPage() {
               <td className="flex gap-2 p-2">
                 {i.status === "UNPAID" && (
                   <>
-                    <button onClick={() => pay(i.id)} className="rounded-lg bg-blue-700 px-3 py-1 text-white">Pay</button>
+                    <button onClick={() => pay(i.id)} className="rounded-lg bg-blue-600 px-3 py-1 text-white">Pay</button>
                     <button onClick={() => checkStatus(i.id)} className="rounded-lg border px-3 py-1">Check status</button>
                   </>
                 )}

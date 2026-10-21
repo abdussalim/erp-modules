@@ -28,13 +28,14 @@ export default function InventoryPage() {
 
   return (
     <div>
-      <h1 className="mb-4 text-2xl font-bold">Inventory</h1>
+      <h1 className="text-2xl font-bold">Inventory</h1>
+      <p className="mb-6 text-slate-500">Manage MiFi devices and their status.</p>
 
-      <form onSubmit={addDevice} className="mb-6 flex flex-wrap gap-2">
+      <form onSubmit={addDevice} className="card mb-6 flex flex-wrap gap-3">
         <input required placeholder="Serial number" className="rounded-lg border p-2" value={form.serialNumber} onChange={(e) => setForm({ ...form, serialNumber: e.target.value })} />
         <input required placeholder="Model" className="rounded-lg border p-2" value={form.model} onChange={(e) => setForm({ ...form, model: e.target.value })} />
         <input required type="number" placeholder="Daily rate (IDR)" className="rounded-lg border p-2" value={form.dailyRate} onChange={(e) => setForm({ ...form, dailyRate: e.target.value })} />
-        <button className="rounded-lg bg-blue-700 px-4 text-white">Add device</button>
+        <button className="rounded-lg bg-blue-600 px-4 py-2 text-white">Add device</button>
       </form>
 
       <table className="w-full bg-white text-left shadow">
